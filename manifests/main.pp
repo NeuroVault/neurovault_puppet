@@ -227,7 +227,7 @@ define neurovault::main (
   
   # we install packages one by one in the order they are in requirements.txt to work around missing dependencies in some of the packages
   exec { 'install requirements.txt':
-        command => "cat $tmp_dir/temp_requirements.txt | xargs -n 1 -L 1 $env_path/bin/pip install",
+        command => "cat $tmp_dir/temp_requirements.txt | xargs -n 1 -L 1 -I{} $env_path/bin/pip install '{}'",
     	user => $system_user,
     	group => $system_user,
         provider => "shell",
