@@ -53,6 +53,11 @@ define neurovault::main (
 
   class { 'postgresql::server': }
 
+  # Get hstore contrib
+  class { 'postgresql::server::contrib':
+    package_ensure => 'present',
+  }
+
   $app_path = "$env_path/NeuroVault"
 
   # Add most paths
@@ -262,6 +267,11 @@ define neurovault::main (
   postgresql::server::db { $db_name:
     user => $db_username,
     password => postgresql_password($db_username, $db_userpassword)
+  } ->
+
+  postgresql::server::extension { 'hstore':
+    database => $db_name,
+    ensure => present,
   } ->
 
   neurovault::database { 'setup_db':
